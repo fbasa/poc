@@ -3,7 +3,7 @@ import { JobService } from 'src/app/services';
 import { Job } from 'src/app/models';
 import { BaseComponent } from 'src/app/shared/base/base.component';
 import { of } from 'rxjs';
-import { switchMap, flatMap } from 'rxjs/operators';
+import { switchMap, flatMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'poc-jobs',
@@ -40,6 +40,7 @@ export class JobsComponent extends BaseComponent implements OnInit, OnDestroy {
 
   getJobs(){
     this.jobService.getJobs()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe(jobs => {
       this.jobs = jobs;
     });
@@ -57,7 +58,8 @@ export class JobsComponent extends BaseComponent implements OnInit, OnDestroy {
       switchMap(ifNew => ifNew 
         ? this.jobService.addJob(this.job) 
         : this.jobService.updateJob(this.job)),
-      flatMap(p => this.jobService.getJobs())
+      flatMap(p => this.jobService.getJobs()),
+      takeUntil(this.destroyed$)
     ).subscribe(jobs => {
       this.jobs = jobs;
       this.displayDialog = false;
@@ -68,7 +70,8 @@ export class JobsComponent extends BaseComponent implements OnInit, OnDestroy {
     this.jobService
     .deleteJob(this.selectedJob.id)
     .pipe(
-      flatMap(u => this.jobService.getJobs())
+      flatMap(u => this.jobService.getJobs()),
+      takeUntil(this.destroyed$)
     ).subscribe(jobs => {
       this.displayDialog = false;
       this.jobs = jobs;

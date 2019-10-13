@@ -59,7 +59,8 @@ export class UsersComponent extends BaseComponent implements OnInit, OnDestroy {
       switchMap(ifNew => ifNew 
         ? this.userService.addUser(this.user) 
         : this.userService.updateUser(this.user)),
-      flatMap(p => this.userService.getUsers())
+      flatMap(p => this.userService.getUsers()),
+      takeUntil(this.destroyed$)
     ).subscribe(users => {
       this.users = users;
       this.displayDialog = false;
@@ -70,7 +71,8 @@ export class UsersComponent extends BaseComponent implements OnInit, OnDestroy {
     this.userService
     .deleteUser(this.selectedUser.id)
     .pipe(
-      flatMap(u => this.userService.getUsers())
+      flatMap(u => this.userService.getUsers()),
+      takeUntil(this.destroyed$)
     ).subscribe(users => {
       this.displayDialog = false;
       this.users = users;
