@@ -1,0 +1,74 @@
+
+<div class="new-entry">
+    <button type="button" pButton icon="fa fa-plus" (click)="showDialogToAdd()" label="Add"></button>
+</div>
+   
+<p-table [columns]="cols" [value]="users" selectionMode="single" [(selection)]="selectedUser" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15">
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                {{col.header}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+            <td *ngFor="let col of columns">
+                {{rowData[col.field]}}
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog header="User Details" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true"  [style]="{width: '500px'}">
+    <div class="ui-g ui-fluid" *ngIf="user">
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="name">Name</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="name" [(ngModel)]="user.name" />
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="dob">Date of Birth</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="dob" [(ngModel)]="user.dob"  type="text"/>
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="email">E-mail</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="email" [(ngModel)]="user.email" type="email"/>
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="gender">Gender</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="gender" [(ngModel)]="user.gender" />
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="rate">Hourly Rate</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="rate" [(ngModel)]="user.hourlyRate" />
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="fa fa-close" (click)="deleteUser()" label="Delete"></button>
+            <button type="button" pButton icon="fa fa-check" (click)="saveUser()" label="Save"></button>
+        </div>
+    </p-footer>
+</p-dialog>
+
